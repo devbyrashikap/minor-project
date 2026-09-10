@@ -1,0 +1,45 @@
+/* Global OneSpace styles */
+:root {
+  --bs-primary-rgb: 13, 110, 253;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.card {
+  border-radius: 0.5rem;
+}
+
+.table th {
+  font-weight: 600;
+  background-color: #f8f9fa;
+}
+
+.badge {
+  font-weight: 500;
+}
+
+.toast-container {
+  z-index: 1090;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.empty-state .bi {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.5;
+}
+
+.nav-tabs .nav-link {
+  font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+  border-bottom-color: #0d6efd;
+}

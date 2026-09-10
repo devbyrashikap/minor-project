@@ -1,0 +1,28 @@
+/* Dashboard specific styles */
+.dashboard-summary .card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dashboard-summary .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-section .card {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.activity-item {
+  border-left: 3px solid #dee2e6;
+  padding-left: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.activity-item:last-child {
+  margin-bottom: 0;
+}
+
+.activity-item .activity-time {
+  font-size: 0.75rem;
+  color: #6c757d;
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | OneSpace</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <header class="bg-white border-bottom shadow-sm sticky-top">
+    <nav class="container-fluid px-3 px-md-4 py-2" aria-label="Main navigation">
+      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
+        <a href="workspaces.html" class="text-decoration-none d-flex align-items-center">
+          <i class="bi bi-grid-3x3-gap-fill text-primary fs-4 me-2"></i>
+          <span class="fw-bold fs-5 text-dark">OneSpace</span>
+        </a>
+        <ul class="nav nav-tabs nav-fill flex-row flex-wrap gap-1" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" href="dashboard.html?workspace_id=WS_ID" aria-current="page" data-nav="dashboard">
+              <i class="bi bi-speedometer2 me-1"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="tasks.html?workspace_id=WS_ID" data-nav="tasks">
+              <i class="bi bi-kanban me-1"></i> Tasks
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="notes.html?workspace_id=WS_ID" data-nav="notes">
+              <i class="bi bi-journal-text me-1"></i> Notes
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="resources.html?workspace_id=WS_ID" data-nav="resources">
+              <i class="bi bi-link-45deg me-1"></i> Resources
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="files.html?workspace_id=WS_ID" data-nav="files">
+              <i class="bi bi-file-earmark me-1"></i> Files
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="search.html?workspace_id=WS_ID" data-nav="search">
+              <i class="bi bi-search me-1"></i> Search
+            </a>
+          </li>
+        </ul>
+        <button class="btn btn-outline-secondary btn-sm ms-auto" id="logoutBtn" type="button">
+          <i class="bi bi-box-arrow-right me-1"></i> Logout
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container-fluid py-4" id="app">
+    <div class="d-flex flex-column flex-md-row align-items-start justify-content-between mb-4 gap-3">
+      <div>
+        <nav aria-label="Breadcrumb" class="mb-2">
+          <ol class="breadcrumb mb-0 small">
+            <li class="breadcrumb-item"><a href="workspaces.html">Workspaces</a></li>
+            <li class="breadcrumb-item active" aria-current="page" id="workspaceName">Dashboard</li>
+          </ol>
+        </nav>
+        <h1 class="h3 mb-1" id="workspaceTitle">Workspace</h1>
+        <p class="text-muted mb-0" id="workspaceDescription">Workspace description</p>
+      </div>
+      <a href="workspaces.html" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Back to Workspaces
+      </a>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4 dashboard-summary" id="summaryCards">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- Recent Sections -->
+    <div class="row g-4">
+      <div class="col-12 col-lg-6">
+        <section class="dashboard-section card h-100" aria-labelledby="recentTasksHeading">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0" id="recentTasksHeading"><i class="bi bi-kanban me-1"></i> Recent Tasks</h5>
+            <a href="tasks.html?workspace_id=WS_ID" class="btn btn-sm btn-link p-0" id="viewAllTasks">View all</a>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush" id="recentTasksList">
+              <!-- Injected -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <section class="dashboard-section card h-100" aria-labelledby="recentNotesHeading">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0" id="recentNotesHeading"><i class="bi bi-journal-text me-1"></i> Recent Notes</h5>
+            <a href="notes.html?workspace_id=WS_ID" class="btn btn-sm btn-link p-0" id="viewAllNotes">View all</a>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush" id="recentNotesList">
+              <!-- Injected -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <section class="dashboard-section card h-100" aria-labelledby="recentResourcesHeading">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0" id="recentResourcesHeading"><i class="bi bi-link-45deg me-1"></i> Recent Resources</h5>
+            <a href="resources.html?workspace_id=WS_ID" class="btn btn-sm btn-link p-0" id="viewAllResources">View all</a>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush" id="recentResourcesList">
+              <!-- Injected -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <section class="dashboard-section card h-100" aria-labelledby="recentFilesHeading">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0" id="recentFilesHeading"><i class="bi bi-file-earmark me-1"></i> Recent Files</h5>
+            <a href="files.html?workspace_id=WS_ID" class="btn btn-sm btn-link p-0" id="viewAllFiles">View all</a>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush" id="recentFilesList">
+              <!-- Injected -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-12">
+        <section class="dashboard-section card" aria-labelledby="recentActivityHeading">
+          <div class="card-header">
+            <h5 class="mb-0" id="recentActivityHeading"><i class="bi bi-activity me-1"></i> Recent Activity</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush" id="recentActivityList">
+              <!-- Injected -->
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
