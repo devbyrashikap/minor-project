@@ -19,8 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const type = passwordInput.type === "password" ? "text" : "password";
     passwordInput.type = type;
     confirmInput.type = type;
-    toggleIcon.classList.toggle("bi-eye");
-    toggleIcon.classList.toggle("bi-eye-slash");
+    toggleIcon.textContent = type === "password" ? "visibility_off" : "visibility";
     toggleBtn.setAttribute("aria-label", type === "password" ? "Show passwords" : "Hide passwords");
   });
 

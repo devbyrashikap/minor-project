@@ -28,7 +28,7 @@ A centralized, project‑based **work‑context management** web application bui
 | Styling | CSS3 + **Bootstrap 5.3** (CDN) + **Bootstrap Icons** (CDN) |
 | Scripting | Vanilla **JavaScript ES6+** (no modules, plain `<script>` tags) |
 | Persistence | `localStorage` (seeded once from `mock-data.js`) |
-| Build / bundler | **None** – open `login.html` directly in a browser |
+| Build / bundler | **None** – serve statically via `python serve.py` and visit http://localhost:8080 |
 
 ---
 
@@ -73,11 +73,16 @@ onespace-frontend/
 ## How to Run
 
 1. Clone or download this folder.
-2. Open **`onespace-frontend/login.html`** in any modern browser (double‑click works – no web server required).
-3. Log in with the seeded credentials:
+2. Start the local frontend server (requires Python 3, already installed on most systems):
+   ```bash
+   python serve.py
+   ```
+3. Open **http://localhost:8080** in your browser — it takes you straight to the login page.
+   - Custom port: `python serve.py 5500` → http://localhost:5500
+4. Log in with the seeded credentials:
    - **Email:** `demo@onespace.test` **Password:** `demo123`
    - **Email:** `alex@onespace.test` **Password:** `alex123`
-4. Or click **“Create one”** to register a new account.
+5. Or click **"Create one"** to register a new account.
 
 All data is stored in your browser’s `localStorage` under the keys listed below.
 

@@ -11,7 +11,9 @@ const ONE_SPACE_STORAGE_KEYS = {
 };
 
 window.OneSpaceAPI.getWorkspaces = async function () {
-  return withMockData(readCollection(ONE_SPACE_STORAGE_KEYS.workspaces), async function () {
+  return withMockData(async function () {
+    return readCollection(ONE_SPACE_STORAGE_KEYS.workspaces);
+  }, async function () {
     return requestJson("/api/workspaces/", "GET");
   });
 };
@@ -94,7 +96,9 @@ window.OneSpaceAPI.deleteWorkspace = async function (id) {
 };
 
 window.OneSpaceAPI.getTasks = async function (workspaceId) {
-  return withMockData(filterByWorkspace(ONE_SPACE_STORAGE_KEYS.tasks, workspaceId), async function () {
+  return withMockData(async function () {
+    return filterByWorkspace(ONE_SPACE_STORAGE_KEYS.tasks, workspaceId);
+  }, async function () {
     return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/tasks/`, "GET");
   });
 };
@@ -157,7 +161,9 @@ window.OneSpaceAPI.deleteTask = async function (workspaceId, taskId) {
 };
 
 window.OneSpaceAPI.getNotes = async function (workspaceId) {
-  return withMockData(filterByWorkspace(ONE_SPACE_STORAGE_KEYS.notes, workspaceId), async function () {
+  return withMockData(async function () {
+    return filterByWorkspace(ONE_SPACE_STORAGE_KEYS.notes, workspaceId);
+  }, async function () {
     return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/notes/`, "GET");
   });
 };
@@ -220,7 +226,9 @@ window.OneSpaceAPI.deleteNote = async function (workspaceId, noteId) {
 };
 
 window.OneSpaceAPI.getResources = async function (workspaceId) {
-  return withMockData(filterByWorkspace(ONE_SPACE_STORAGE_KEYS.resources, workspaceId), async function () {
+  return withMockData(async function () {
+    return filterByWorkspace(ONE_SPACE_STORAGE_KEYS.resources, workspaceId);
+  }, async function () {
     return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/resources/`, "GET");
   });
 };
@@ -283,7 +291,9 @@ window.OneSpaceAPI.deleteResource = async function (workspaceId, resourceId) {
 };
 
 window.OneSpaceAPI.getFiles = async function (workspaceId) {
-  return withMockData(filterByWorkspace(ONE_SPACE_STORAGE_KEYS.files, workspaceId), async function () {
+  return withMockData(async function () {
+    return filterByWorkspace(ONE_SPACE_STORAGE_KEYS.files, workspaceId);
+  }, async function () {
     return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/files/`, "GET");
   });
 };
@@ -321,7 +331,9 @@ window.OneSpaceAPI.deleteFile = async function (workspaceId, fileId) {
 };
 
 window.OneSpaceAPI.getActivity = async function (workspaceId) {
-  return withMockData(filterByWorkspace(ONE_SPACE_STORAGE_KEYS.activity, workspaceId), async function () {
+  return withMockData(async function () {
+    return filterByWorkspace(ONE_SPACE_STORAGE_KEYS.activity, workspaceId);
+  }, async function () {
     return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/activity/`, "GET");
   });
 };

@@ -1,45 +1,141 @@
-/* Global OneSpace styles */
-:root {
-  --bs-primary-rgb: 13, 110, 253;
-}
-
+/* Global OneSpace styles - Tailwind compatible */
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-.card {
-  border-radius: 0.5rem;
+/* Bootstrap compatibility - d-none class used by JS files */
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+
+/* Material Symbols base style */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
 
-.table th {
-  font-weight: 600;
-  background-color: #f8f9fa;
-}
-
-.badge {
-  font-weight: 500;
-}
-
+/* Toast container positioning */
 .toast-container {
-  z-index: 1090;
+  z-index: 200;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 3rem 1rem;
-  color: #6c757d;
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: #c7c4d8; border-radius: 10px; }
+
+/* Bootstrap modal backdrop override for dark theme */
+.modal-backdrop { z-index: 99; }
+.modal { z-index: 100; }
+
+/* Form validation */
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+  border-color: #ba1a1a;
+}
+.was-validated .form-select:invalid,
+.form-select.is-invalid {
+  border-color: #ba1a1a;
 }
 
-.empty-state .bi {
-  font-size: 3rem;
-  margin-bottom: 0.75rem;
+/* invalid-feedback show/hide */
+.invalid-feedback {
+  display: none;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.was-validated :invalid ~ .invalid-feedback {
+  display: block;
+}
+
+/* btn-close minimal styling */
+.btn-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
   opacity: 0.5;
+  padding: 4px;
 }
+.btn-close:hover { opacity: 1; }
 
-.nav-tabs .nav-link {
+/* Bootstrap toast background classes (used by utils.js) */
+.text-bg-success { background-color: #d4edda; color: #155724; }
+.text-bg-danger { background-color: #f8d7da; color: #721c24; }
+.text-bg-warning { background-color: #fff3cd; color: #856404; }
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-size: 14px;
   font-weight: 500;
 }
+.toast-body { flex: 1; }
+.btn-close-white { filter: brightness(0) invert(1); }
 
-.nav-tabs .nav-link.active {
-  border-bottom-color: #0d6efd;
+/* Status select in tasks table */
+.status-select {
+  min-width: 120px;
+  padding: 4px 8px;
+  border-radius: 0.25rem;
+  border: 1px solid #c7c4d8;
+  background: #fcf9f8;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
 }
+.status-select:focus {
+  outline: none;
+  border-color: #3525cd;
+  box-shadow: 0 0 0 1px #3525cd;
+}
+
+/* Form select / control base styles (used by Bootstrap class names in JS) */
+.form-select, .form-control {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1c1b1b;
+  background-color: #fcf9f8;
+  border: 1px solid #c7c4d8;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s;
+}
+.form-select:focus, .form-control:focus {
+  border-color: #3525cd;
+  outline: 0;
+  box-shadow: 0 0 0 2px rgba(53, 37, 205, 0.2);
+}
+.form-select-sm {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+.form-select-sm.form-select {
+  padding-right: 28px;
+}
+
+/* Utility classes used by JS-rendered HTML */
+.text-muted { color: #777587; }
+.small { font-size: 12px; }
+.text-danger { color: #ba1a1a; }
+.text-warning { color: #7e3000; }
+.text-info { color: #505f76; }
+.text-success { color: #155724; }

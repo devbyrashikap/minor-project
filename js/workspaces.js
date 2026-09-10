@@ -75,36 +75,34 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function createWorkspaceCard(ws) {
     const col = document.createElement("div");
-    col.className = "col";
+    col.className = "bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden flex flex-col " + (ws.archived ? "opacity-60" : "");
 
     const archivedBadge = ws.archived
-      ? '<span class="badge bg-secondary ms-2"><i class="bi bi-archive me-1"></i>Archived</span>'
+      ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[14px]">archive</span>Archived</span>'
       : "";
 
     const updated = window.OneSpaceUtils.formatRelativeTime(ws.updated_at);
     const description = ws.description ? window.OneSpaceUtils.escapeHtml(ws.description) : '<span class="text-muted">No description</span>';
 
     col.innerHTML = `
-      <div class="card h-100 shadow-sm ${ws.archived ? "opacity-75" : ""}">
-        <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-start justify-content-between mb-2">
-            <h5 class="card-title mb-0">${window.OneSpaceUtils.escapeHtml(ws.name)}</h5>
-            ${archivedBadge}
-          </div>
-          <p class="card-text text-muted small flex-grow-1">${description}</p>
-          <div class="d-flex align-items-center justify-content-between mt-3 pt-2 border-top">
-            <small class="text-muted"><i class="bi bi-clock-history me-1"></i>Updated ${updated}</small>
-            <div class="btn-group btn-group-sm">
-              <button type="button" class="btn btn-outline-primary open-btn" data-id="${ws.id}" ${ws.archived ? "disabled" : ""} aria-label="Open workspace">
-                <i class="bi bi-box-arrow-up-right"></i> Open
-              </button>
-              <button type="button" class="btn btn-outline-secondary archive-btn" data-id="${ws.id}" data-archived="${ws.archived}" aria-label="${ws.archived ? "Unarchive" : "Archive"} workspace">
-                <i class="bi ${ws.archived ? "bi-box-arrow-up" : "bi-archive"}"></i>
-              </button>
-              <button type="button" class="btn btn-outline-danger delete-btn" data-id="${ws.id}" aria-label="Delete workspace">
-                <i class="bi bi-trash"></i>
-              </button>
-            </div>
+      <div class="p-lg flex flex-col flex-grow">
+        <div class="flex items-start justify-between gap-sm mb-sm">
+          <h5 class="font-headline-sm text-headline-sm text-on-surface flex-grow-1">${window.OneSpaceUtils.escapeHtml(ws.name)}</h5>
+          ${archivedBadge}
+        </div>
+        <p class="text-muted small flex-grow-1 mb-md">${description}</p>
+        <div class="flex items-center justify-between pt-md border-t border-outline-variant">
+          <span class="text-muted small flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span>Updated ${updated}</span>
+          <div class="flex gap-sm">
+            <button type="button" class="open-btn px-3 py-1.5 rounded-lg border border-primary text-primary font-label-sm text-label-sm hover:bg-primary/5 transition-colors flex items-center gap-1" data-id="${ws.id}" ${ws.archived ? "disabled" : ""} aria-label="Open workspace">
+              <span class="material-symbols-outlined text-[16px]">open_in_new</span> Open
+            </button>
+            <button type="button" class="archive-btn p-1.5 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors" data-id="${ws.id}" data-archived="${ws.archived}" aria-label="${ws.archived ? "Unarchive" : "Archive"} workspace">
+              <span class="material-symbols-outlined text-[18px]">${ws.archived ? "unarchive" : "archive"}</span>
+            </button>
+            <button type="button" class="delete-btn p-1.5 rounded-lg border border-outline-variant text-error hover:bg-error-container/30 transition-colors" data-id="${ws.id}" aria-label="Delete workspace">
+              <span class="material-symbols-outlined text-[18px]">delete</span>
+            </button>
           </div>
         </div>
       </div>
