@@ -102,6 +102,7 @@ window.OneSpaceAuth.setToken = function (token, user) {
   const record = {
     token: token,
     userId: user && user.id ? user.id : "",
+    userName: user && user.name ? user.name : "",
     userEmail: user && user.email ? user.email : "",
     createdAt: new Date().toISOString()
   };

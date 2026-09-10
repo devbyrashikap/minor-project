@@ -34,6 +34,10 @@ document.addEventListener("DOMContentLoaded", function () {
   passwordInput.addEventListener("input", validatePasswordMatch);
   confirmInput.addEventListener("input", validatePasswordMatch);
 
+  if (window.OneSpaceMockData) {
+    window.OneSpaceMockData.seed();
+  }
+
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -49,21 +53,14 @@ document.addEventListener("DOMContentLoaded", function () {
     hideMessages();
 
     try {
-      const users = getStoredUsers();
+      const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim().toLowerCase();
-      if (users.some(function (u) { return u.email.toLowerCase() === email; })) {
-        throw new Error("An account with this email already exists.");
-      }
-
-      const newUser = {
-        id: createUserId(),
-        name: document.getElementById("name").value.trim(),
+      await window.OneSpaceAuth.register({
+        name: name,
         email: email,
-        password: passwordInput.value
-      };
-
-      users.push(newUser);
-      saveUsers(users);
+        password: passwordInput.value,
+        confirmPassword: confirmInput.value
+      });
 
       showSuccess("Account created successfully! Redirecting to login…");
       window.setTimeout(function () {
@@ -76,37 +73,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  function getStoredUsers() {
-    try {
-      return JSON.parse(window.localStorage.getItem("onespace_users") || "[]");
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveUsers(users) {
-    window.localStorage.setItem("onespace_users", JSON.stringify(users));
-  }
-
-  function createUserId() {
-    return "user-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-  }
-
   function setLoading(isLoading) {
     registerBtn.disabled = isLoading;
     btnText.classList.toggle("d-none", isLoading);
     btnLoading.classList.toggle("d-none", !isLoading);
+    if (isLoading) btnLoading.classList.remove("hidden");
   }
 
   function showError(message) {
     errorAlert.textContent = message;
     errorAlert.classList.remove("d-none");
+    errorAlert.classList.remove("hidden");
     successAlert.classList.add("d-none");
   }
 
   function showSuccess(message) {
     successAlert.textContent = message;
     successAlert.classList.remove("d-none");
+    successAlert.classList.remove("hidden");
     errorAlert.classList.add("d-none");
   }
 

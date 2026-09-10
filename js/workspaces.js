@@ -13,10 +13,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   const createModalEl = document.getElementById("createWorkspaceModal");
   const createModal = new bootstrap.Modal(createModalEl);
 
-  logoutBtn.addEventListener("click", async function () {
-    await window.OneSpaceAuth.logout();
-    window.location.replace("login.html");
-  });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async function () {
+      await window.OneSpaceAuth.logout();
+      window.location.replace("login.html");
+    });
+  }
 
   createForm.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -58,6 +60,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (!workspaces.length) {
         listContainer.classList.add("d-none");
         emptyState.classList.remove("d-none");
+        emptyState.classList.remove("hidden");
         return;
       }
 

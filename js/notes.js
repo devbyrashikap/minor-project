@@ -15,10 +15,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("backDashboard").href = `dashboard.html?workspace_id=${encodeURIComponent(workspaceId)}`;
 
   const logoutBtn = document.getElementById("logoutBtn");
-  logoutBtn.addEventListener("click", async function () {
-    await window.OneSpaceAuth.logout();
-    window.location.replace("login.html");
-  });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async function () {
+      await window.OneSpaceAuth.logout();
+      window.location.replace("login.html");
+    });
+  }
 
   const notesContainer = document.getElementById("notesContainer");
   const notesEmpty = document.getElementById("notesEmpty");
@@ -50,14 +52,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (!allNotes.length) {
       notesContainer.innerHTML = "";
       notesEmpty.classList.remove("d-none");
+      notesEmpty.classList.remove("hidden");
       return;
     }
     notesEmpty.classList.add("d-none");
     notesContainer.innerHTML = allNotes.map(function (n) {
       const preview = window.OneSpaceUtils.escapeHtml(n.body).substring(0, 200) + (n.body.length > 200 ? "…" : "");
       return `
-        <div class="card border-0 shadow-sm mb-3">
-          <div class="card-body">
+        <div class="card bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden flex flex-col">
+          <div class="card-body p-lg flex flex-col flex-grow">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <h5 class="card-title mb-0">${window.OneSpaceUtils.escapeHtml(n.title)}</h5>
               <div class="btn-group btn-group-sm">

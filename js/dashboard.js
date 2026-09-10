@@ -14,10 +14,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   const logoutBtn = document.getElementById("logoutBtn");
-  logoutBtn.addEventListener("click", async function () {
-    await window.OneSpaceAuth.logout();
-    window.location.replace("login.html");
-  });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async function () {
+      await window.OneSpaceAuth.logout();
+      window.location.replace("login.html");
+    });
+  }
 
   try {
     const [workspace, tasks, notes, resources, files, activity] = await Promise.all([
@@ -86,7 +88,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function renderRecentTasks(tasks) {
     const list = document.getElementById("recentTasksList");
-    const recent = tasks.slice(0, 5);
+    const recent = [...tasks].sort(function (a, b) {
+      return new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at);
+    }).slice(0, 5);
     if (!recent.length) {
       list.innerHTML = '<div class="list-group-item text-center text-muted py-4">No tasks yet</div>';
       return;
@@ -111,7 +115,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function renderRecentNotes(notes) {
     const list = document.getElementById("recentNotesList");
-    const recent = notes.slice(0, 5);
+    const recent = [...notes].sort(function (a, b) {
+      return new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at);
+    }).slice(0, 5);
     if (!recent.length) {
       list.innerHTML = '<div class="list-group-item text-center text-muted py-4">No notes yet</div>';
       return;
@@ -130,7 +136,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function renderRecentResources(resources) {
     const list = document.getElementById("recentResourcesList");
-    const recent = resources.slice(0, 5);
+    const recent = [...resources].sort(function (a, b) {
+      return new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at);
+    }).slice(0, 5);
     if (!recent.length) {
       list.innerHTML = '<div class="list-group-item text-center text-muted py-4">No resources yet</div>';
       return;
@@ -148,13 +156,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function renderRecentFiles(files) {
     const list = document.getElementById("recentFilesList");
-    const recent = files.slice(0, 5);
+    const recent = [...files].sort(function (a, b) {
+      return new Date(b.upload_date) - new Date(a.upload_date);
+    }).slice(0, 5);
     if (!recent.length) {
       list.innerHTML = '<div class="list-group-item text-center text-muted py-4">No files yet</div>';
       return;
     }
     list.innerHTML = recent.map(function (f) {
-      const size = formatFileSize(f.size);
+      const size = window.OneSpaceUtils.formatFileSize(f.size);
       return `
         <div class="list-group-item d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
@@ -174,7 +184,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function renderRecentActivity(activity) {
     const list = document.getElementById("recentActivityList");
-    const recent = activity.slice(0, 10);
+    const recent = [...activity].sort(function (a, b) {
+      return new Date(b.timestamp) - new Date(a.timestamp);
+    }).slice(0, 10);
     if (!recent.length) {
       list.innerHTML = '<div class="list-group-item text-center text-muted py-4">No recent activity</div>';
       return;
@@ -197,13 +209,5 @@ document.addEventListener("DOMContentLoaded", async function () {
         </div>
       `;
     }).join("");
-  }
-
-  function formatFileSize(bytes) {
-    if (bytes === 0) return "0 B";
-    const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
   }
 });

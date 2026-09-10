@@ -68,7 +68,7 @@ tailwind.config = {
     </div>
 
     <!-- Error Alert -->
-    <div id="loginError" class="hidden bg-error-container text-on-error-container p-sm rounded-lg font-body-md text-body-md mb-md"></div>
+    <div id="loginError" class="d-none bg-error-container text-on-error-container p-sm rounded-lg font-body-md text-body-md mb-md"></div>
 
     <form id="loginForm" class="space-y-gutter flex-grow needs-validation" novalidate>
       <div class="flex flex-col gap-xs">
@@ -91,7 +91,7 @@ tailwind.config = {
       </div>
       <button class="w-full h-[44px] bg-primary hover:bg-primary-fixed-variant text-on-primary font-label-sm text-label-sm rounded-DEFAULT flex items-center justify-center gap-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" type="submit" id="loginBtn">
         <span class="btn-text flex items-center gap-sm">Log In <span class="material-symbols-outlined text-[18px]">arrow_forward</span></span>
-        <span class="btn-loading hidden"><span class="w-4 h-4 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin inline-block"></span> Signing in...</span>
+        <span class="btn-loading d-none"><span class="w-4 h-4 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin inline-block"></span> Signing in...</span>
       </button>
     </form>
 

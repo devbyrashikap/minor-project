@@ -114,6 +114,7 @@ window.OneSpaceAPI.createTask = async function (workspaceId, data) {
     const tasks = await readCollection(ONE_SPACE_STORAGE_KEYS.tasks);
     tasks.push(task);
     await writeCollection(ONE_SPACE_STORAGE_KEYS.tasks, tasks);
+    await logActivity(workspaceId, "task_created", `Created task "${task.title}"`);
     return clone(task);
   }, async function () {
     return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/tasks/`, "POST", data);
@@ -138,6 +139,9 @@ window.OneSpaceAPI.updateTask = async function (workspaceId, taskId, data) {
     };
     tasks[index] = updated;
     await writeCollection(ONE_SPACE_STORAGE_KEYS.tasks, tasks);
+    const actionMsg = updated.status === "Done" ? `Completed task "${updated.title}"` : `Updated task "${updated.title}"`;
+    const actionType = updated.status === "Done" ? "task_completed" : "task_updated";
+    await logActivity(workspaceId, actionType, actionMsg);
     return clone(updated);
   }, async function () {
     return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/tasks/${encodeURIComponent(taskId)}/`, "PATCH", data);
@@ -179,6 +183,7 @@ window.OneSpaceAPI.createNote = async function (workspaceId, data) {
     const notes = await readCollection(ONE_SPACE_STORAGE_KEYS.notes);
     notes.push(note);
     await writeCollection(ONE_SPACE_STORAGE_KEYS.notes, notes);
+    await logActivity(workspaceId, "note_created", `Created note "${note.title}"`);
     return clone(note);
   }, async function () {
     return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/notes/`, "POST", data);
@@ -244,6 +249,7 @@ window.OneSpaceAPI.createResource = async function (workspaceId, data) {
     const resources = await readCollection(ONE_SPACE_STORAGE_KEYS.resources);
     resources.push(resource);
     await writeCollection(ONE_SPACE_STORAGE_KEYS.resources, resources);
+    await logActivity(workspaceId, "resource_added", `Added resource "${resource.title}"`);
     return clone(resource);
   }, async function () {
     return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/resources/`, "POST", data);
@@ -308,6 +314,7 @@ window.OneSpaceAPI.createMockFile = async function (workspaceId, data) {
     const files = await readCollection(ONE_SPACE_STORAGE_KEYS.files);
     files.push(file);
     await writeCollection(ONE_SPACE_STORAGE_KEYS.files, files);
+    await logActivity(workspaceId, "file_uploaded", `Uploaded ${file.filename}`);
     return clone(file);
   }, async function () {
     return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/files/`, "POST", data, true);
@@ -411,6 +418,23 @@ async function filterCollectionByWorkspace(key, workspaceId) {
   });
   await writeCollection(key, filtered);
   return filtered;
+}
+
+async function logActivity(workspaceId, type, message) {
+  try {
+    const activities = await readCollection(ONE_SPACE_STORAGE_KEYS.activity);
+    const item = {
+      id: createId("activity"),
+      workspace_id: workspaceId,
+      type: type,
+      message: message,
+      timestamp: nowIsoString()
+    };
+    activities.unshift(item);
+    await writeCollection(ONE_SPACE_STORAGE_KEYS.activity, activities);
+  } catch (err) {
+    // Non-fatal if activity logging fails
+  }
 }
 
 async function requireWorkspace(workspaceId) {

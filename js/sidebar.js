@@ -118,7 +118,7 @@
       });
     }
 
-    ["logoutBtnMobile", "logoutBtnBottom"].forEach(function (id) {
+    ["logoutBtn", "logoutBtnMobile"].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.addEventListener("click", doLogout);
     });

@@ -16,6 +16,21 @@
   border-radius: 50%;
   flex-shrink: 0;
 }
+.icon-bg.bg-primary { background-color: #3525cd; color: #ffffff; }
+.icon-bg.bg-success { background-color: #198754; color: #ffffff; }
+.icon-bg.bg-warning { background-color: #fd7e14; color: #ffffff; }
+.icon-bg.bg-info { background-color: #0dcaf0; color: #ffffff; }
+.icon-bg.bg-secondary { background-color: #505f76; color: #ffffff; }
+.text-white { color: #ffffff !important; }
+
+#summaryCards .card {
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+#summaryCards .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
 
 /* List group item styling for Tailwind compatibility */
 .list-group-item {

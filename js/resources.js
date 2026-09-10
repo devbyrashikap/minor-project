@@ -15,10 +15,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("backDashboard").href = `dashboard.html?workspace_id=${encodeURIComponent(workspaceId)}`;
 
   const logoutBtn = document.getElementById("logoutBtn");
-  logoutBtn.addEventListener("click", async function () {
-    await window.OneSpaceAuth.logout();
-    window.location.replace("login.html");
-  });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async function () {
+      await window.OneSpaceAuth.logout();
+      window.location.replace("login.html");
+    });
+  }
 
   const resourcesContainer = document.getElementById("resourcesContainer");
   const resourcesEmpty = document.getElementById("resourcesEmpty");
@@ -51,13 +53,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (!allResources.length) {
       resourcesContainer.innerHTML = "";
       resourcesEmpty.classList.remove("d-none");
+      resourcesEmpty.classList.remove("hidden");
       return;
     }
     resourcesEmpty.classList.add("d-none");
     resourcesContainer.innerHTML = allResources.map(function (r) {
+      const safeUrl = r.url && /^https?:\/\//i.test(r.url) ? r.url : (r.url ? `https://${r.url}` : "#");
       return `
-        <div class="card border-0 shadow-sm mb-3">
-          <div class="card-body">
+        <div class="card bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden flex flex-col">
+          <div class="card-body p-lg flex flex-col flex-grow">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <h5 class="card-title mb-0">${window.OneSpaceUtils.escapeHtml(r.title)}</h5>
               <div class="btn-group btn-group-sm">
@@ -69,9 +73,9 @@ document.addEventListener("DOMContentLoaded", async function () {
                 </button>
               </div>
             </div>
-            <p class="card-text text-muted small mb-1">${window.OneSpaceUtils.escapeHtml(r.description || "No description")}</p>
-            <div class="d-flex align-items-center gap-2">
-              <a href="${window.OneSpaceUtils.escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+            <p class="card-text text-muted small mb-2 flex-grow">${window.OneSpaceUtils.escapeHtml(r.description || "No description")}</p>
+            <div class="d-flex align-items-center justify-content-between pt-sm border-t border-outline-variant mt-auto">
+              <a href="${window.OneSpaceUtils.escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
                 <i class="bi bi-box-arrow-up-right me-1"></i> Open
               </a>
               <small class="text-muted">Added ${window.OneSpaceUtils.formatRelativeTime(r.updated_at)}</small>

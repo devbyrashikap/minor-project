@@ -15,10 +15,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("backDashboard").href = `dashboard.html?workspace_id=${encodeURIComponent(workspaceId)}`;
 
   const logoutBtn = document.getElementById("logoutBtn");
-  logoutBtn.addEventListener("click", async function () {
-    await window.OneSpaceAuth.logout();
-    window.location.replace("login.html");
-  });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async function () {
+      await window.OneSpaceAuth.logout();
+      window.location.replace("login.html");
+    });
+  }
 
   const filesBody = document.getElementById("filesBody");
   const filesEmpty = document.getElementById("filesEmpty");
@@ -44,23 +46,24 @@ document.addEventListener("DOMContentLoaded", async function () {
       filesBody.innerHTML = "";
       filesTable.classList.add("d-none");
       filesEmpty.classList.remove("d-none");
+      filesEmpty.classList.remove("hidden");
       return;
     }
     filesTable.classList.remove("d-none");
     filesEmpty.classList.add("d-none");
     filesBody.innerHTML = files.map(function (f) {
-      const size = formatFileSize(f.size);
+      const size = window.OneSpaceUtils.formatFileSize(f.size);
       return `
-        <tr data-id="${f.id}">
-          <td>
+        <tr data-id="${f.id}" class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="px-md py-sm">
             <div class="d-flex align-items-center">
-              <i class="bi bi-file-earmark text-secondary me-2"></i>
-              <span>${window.OneSpaceUtils.escapeHtml(f.filename)}</span>
+              <i class="bi bi-file-earmark text-secondary me-2 fs-5"></i>
+              <span class="font-medium">${window.OneSpaceUtils.escapeHtml(f.filename)}</span>
             </div>
           </td>
-          <td>${size}</td>
-          <td>${window.OneSpaceUtils.formatRelativeTime(f.upload_date)}</td>
-          <td class="text-end">
+          <td class="px-md py-sm hidden sm:table-cell text-muted">${size}</td>
+          <td class="px-md py-sm hidden md:table-cell text-muted">${window.OneSpaceUtils.formatRelativeTime(f.upload_date)}</td>
+          <td class="px-md py-sm text-end">
             <div class="btn-group btn-group-sm">
               <button type="button" class="btn btn-outline-secondary download-btn" disabled title="Download unavailable in mock mode" aria-label="Download unavailable">
                 <i class="bi bi-download"></i>
@@ -111,14 +114,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch (err) {
       window.OneSpaceUtils.showError(err.message);
     }
-  }
-
-  function formatFileSize(bytes) {
-    if (bytes === 0) return "0 B";
-    const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
   }
 
   loadFiles();

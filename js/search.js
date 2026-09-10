@@ -15,10 +15,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("backDashboard").href = `dashboard.html?workspace_id=${encodeURIComponent(workspaceId)}`;
 
   const logoutBtn = document.getElementById("logoutBtn");
-  logoutBtn.addEventListener("click", async function () {
-    await window.OneSpaceAuth.logout();
-    window.location.replace("login.html");
-  });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async function () {
+      await window.OneSpaceAuth.logout();
+      window.location.replace("login.html");
+    });
+  }
 
   const searchInput = document.getElementById("searchInput");
   const clearSearch = document.getElementById("clearSearch");
@@ -61,6 +63,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (!hasResults) {
       searchResults.innerHTML = "";
       searchEmpty.classList.remove("d-none");
+      searchEmpty.classList.remove("hidden");
       return;
     }
     searchEmpty.classList.add("d-none");

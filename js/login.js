@@ -52,11 +52,13 @@ document.addEventListener("DOMContentLoaded", function () {
     loginBtn.disabled = isLoading;
     btnText.classList.toggle("d-none", isLoading);
     btnLoading.classList.toggle("d-none", !isLoading);
+    if (isLoading) btnLoading.classList.remove("hidden");
   }
 
   function showError(message) {
     errorAlert.textContent = message;
     errorAlert.classList.remove("d-none");
+    errorAlert.classList.remove("hidden");
   }
 
   function hideError() {

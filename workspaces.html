@@ -64,7 +64,7 @@ tailwind.config = {
     </button>
   </div>
   <div id="workspaceList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter"></div>
-  <div id="emptyState" class="hidden">
+  <div id="emptyState" class="d-none">
     <div class="bg-surface-variant/30 dark:bg-surface-container-highest/30 rounded-lg border border-dashed border-outline-variant p-xl flex flex-col items-center justify-center gap-md text-center min-h-[300px]">
       <div class="h-16 w-16 bg-surface dark:bg-surface-container-low rounded-full flex items-center justify-center shadow-sm">
         <span class="material-symbols-outlined text-primary text-[32px]">add_box</span>
@@ -104,7 +104,7 @@ tailwind.config = {
           <button type="button" class="px-md py-2 rounded-lg font-headline-sm text-label-sm border border-outline-variant text-on-surface hover:bg-surface-container-low transition-colors h-[44px]" data-bs-dismiss="modal">Cancel</button>
           <button type="submit" class="px-md py-2 rounded-lg font-headline-sm text-label-sm bg-primary text-on-primary hover:bg-primary-container transition-colors h-[44px] flex items-center gap-sm" id="createWorkspaceSubmit">
             <span class="btn-text">Create</span>
-            <span class="btn-loading hidden"><span class="w-4 h-4 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin inline-block"></span> Creating...</span>
+            <span class="btn-loading d-none"><span class="w-4 h-4 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin inline-block"></span> Creating...</span>
           </button>
         </div>
       </form>

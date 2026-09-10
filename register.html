@@ -64,9 +64,9 @@ tailwind.config = {
   <div class="bg-surface dark:bg-surface-container-low border border-outline-variant dark:border-outline rounded-xl p-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
 
     <!-- Error Alert -->
-    <div id="registerError" class="hidden bg-error-container text-on-error-container p-sm rounded-lg font-body-md text-body-md mb-md"></div>
+    <div id="registerError" class="d-none bg-error-container text-on-error-container p-sm rounded-lg font-body-md text-body-md mb-md"></div>
     <!-- Success Alert -->
-    <div id="registerSuccess" class="hidden bg-green-50 text-green-700 p-sm rounded-lg font-body-md text-body-md mb-md"></div>
+    <div id="registerSuccess" class="d-none bg-green-50 text-green-700 p-sm rounded-lg font-body-md text-body-md mb-md"></div>
 
     <form id="registerForm" class="space-y-md needs-validation" novalidate>
       <div class="flex flex-col gap-xs">
@@ -110,7 +110,7 @@ tailwind.config = {
       </div>
       <button class="w-full h-[44px] bg-primary hover:bg-primary-fixed-variant text-on-primary font-label-sm text-label-sm rounded-DEFAULT flex items-center justify-center gap-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary mt-sm" type="submit" id="registerBtn">
         <span class="btn-text flex items-center gap-sm">Create Account</span>
-        <span class="btn-loading hidden"><span class="w-4 h-4 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin inline-block"></span> Creating account...</span>
+        <span class="btn-loading d-none"><span class="w-4 h-4 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin inline-block"></span> Creating account...</span>
       </button>
     </form>
     <div class="relative flex items-center py-lg mt-md">

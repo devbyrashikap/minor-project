@@ -126,6 +126,15 @@ window.OneSpaceUtils.escapeHtml = function (value) {
   });
 };
 
+window.OneSpaceUtils.formatFileSize = function (bytes) {
+  const num = Number(bytes);
+  if (!Number.isFinite(num) || num <= 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.min(Math.floor(Math.log(num) / Math.log(k)), sizes.length - 1);
+  return parseFloat((num / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+};
+
 function createToastContainer() {
   const container = document.createElement("div");
   container.id = "toast-container";

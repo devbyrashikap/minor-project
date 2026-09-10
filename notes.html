@@ -83,7 +83,7 @@ tailwind.config = {
   <div id="notesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter"></div>
 
   <!-- Empty State -->
-  <div id="notesEmpty" class="hidden">
+  <div id="notesEmpty" class="d-none">
     <div class="bg-surface-variant/30 rounded-lg border border-dashed border-outline-variant p-xl flex flex-col items-center justify-center gap-md text-center min-h-[300px]">
       <span class="material-symbols-outlined text-on-surface-variant/40 text-[48px]">description</span>
       <div>
@@ -122,7 +122,7 @@ tailwind.config = {
           <button type="button" class="px-md py-2 rounded-lg font-headline-sm text-label-sm border border-outline-variant text-on-surface hover:bg-surface-container-low transition-colors h-[44px]" data-bs-dismiss="modal">Cancel</button>
           <button type="submit" class="px-md py-2 rounded-lg font-headline-sm text-label-sm bg-primary text-on-primary hover:bg-primary-container transition-colors h-[44px] flex items-center gap-sm" id="noteSubmit">
             <span class="btn-text">Save</span>
-            <span class="btn-loading hidden"><span class="w-4 h-4 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin inline-block"></span> Saving...</span>
+            <span class="btn-loading d-none"><span class="w-4 h-4 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin inline-block"></span> Saving...</span>
           </button>
         </div>
       </form>

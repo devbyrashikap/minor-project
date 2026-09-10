@@ -16,10 +16,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("backDashboard").href = `dashboard.html?workspace_id=${encodeURIComponent(workspaceId)}`;
 
   const logoutBtn = document.getElementById("logoutBtn");
-  logoutBtn.addEventListener("click", async function () {
-    await window.OneSpaceAuth.logout();
-    window.location.replace("login.html");
-  });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async function () {
+      await window.OneSpaceAuth.logout();
+      window.location.replace("login.html");
+    });
+  }
 
   const tasksBody = document.getElementById("tasksBody");
   const tasksEmpty = document.getElementById("tasksEmpty");
@@ -43,6 +45,16 @@ document.addEventListener("DOMContentLoaded", async function () {
   const taskBtnLoading = taskSubmit.querySelector(".btn-loading");
   const modalLabel = document.getElementById("taskModalLabel");
   const emptyAddTaskBtn = document.getElementById("emptyAddTaskBtn");
+
+  // Read initial filter from URL params (e.g. from Dashboard cards)
+  const initialStatus = window.OneSpaceUtils.getQueryParam("status");
+  if (initialStatus && ["To Do", "In Progress", "Done"].includes(initialStatus)) {
+    statusFilter.value = initialStatus;
+  }
+  const initialPriority = window.OneSpaceUtils.getQueryParam("priority");
+  if (initialPriority && ["High", "Medium", "Low"].includes(initialPriority)) {
+    priorityFilter.value = initialPriority;
+  }
 
   let allTasks = [];
 
@@ -79,6 +91,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       tasksBody.innerHTML = "";
       tasksCard.querySelector("table").classList.add("d-none");
       tasksEmpty.classList.remove("d-none");
+      tasksEmpty.classList.remove("hidden");
       return;
     }
     tasksCard.querySelector("table").classList.remove("d-none");
@@ -87,23 +100,23 @@ document.addEventListener("DOMContentLoaded", async function () {
       const badgeClass = t.status === "Done" ? "bg-success" : t.status === "In Progress" ? "bg-primary" : "bg-secondary";
       const priorityClass = t.priority === "High" ? "text-danger" : t.priority === "Medium" ? "text-warning" : "text-info";
       const due = t.due_date ? window.OneSpaceUtils.formatDate(t.due_date) : "—";
-      const overdue = t.due_date && t.status !== "Done" && new Date(t.due_date) < new Date();
+      const overdue = t.due_date && t.status !== "Done" && new Date(t.due_date + "T23:59:59") < new Date();
       return `
-        <tr data-id="${t.id}">
-          <td>
+        <tr data-id="${t.id}" class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="px-md py-sm">
             <strong>${window.OneSpaceUtils.escapeHtml(t.title)}</strong>
             ${t.description ? `<div class="text-muted small">${window.OneSpaceUtils.escapeHtml(t.description).substring(0, 100)}${t.description.length > 100 ? "…" : ""}</div>` : ""}
           </td>
-          <td>
+          <td class="px-md py-sm">
             <select class="form-select form-select-sm status-select" data-id="${t.id}" aria-label="Change status">
               <option value="To Do" ${t.status === "To Do" ? "selected" : ""}>To Do</option>
               <option value="In Progress" ${t.status === "In Progress" ? "selected" : ""}>In Progress</option>
               <option value="Done" ${t.status === "Done" ? "selected" : ""}>Done</option>
             </select>
           </td>
-          <td><span class="badge bg-light ${priorityClass}">${window.OneSpaceUtils.escapeHtml(t.priority)}</span></td>
-          <td class="${overdue ? "text-danger fw-bold" : ""}">${due}${overdue ? ' <i class="bi bi-exclamation-triangle-fill" title="Overdue"></i>' : ""}</td>
-          <td class="text-end">
+          <td class="px-md py-sm hidden sm:table-cell"><span class="badge bg-light ${priorityClass}">${window.OneSpaceUtils.escapeHtml(t.priority)}</span></td>
+          <td class="px-md py-sm hidden md:table-cell ${overdue ? "text-danger fw-bold" : ""}">${due}${overdue ? ' <i class="bi bi-exclamation-triangle-fill" title="Overdue"></i>' : ""}</td>
+          <td class="px-md py-sm text-end">
             <div class="btn-group btn-group-sm">
               <button type="button" class="btn btn-outline-secondary edit-btn" data-id="${t.id}" aria-label="Edit task">
                 <i class="bi bi-pencil"></i>
