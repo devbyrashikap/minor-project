@@ -9,7 +9,8 @@ Your job is to implement the real API that replaces the mock data layer.
 ## 1. Project Overview
 
 OneSpace is a small product-management app organized around **workspaces**. Each
-workspace holds **tasks, notes, resources, and files**, plus an **activity log**.
+workspace holds **tasks, notes, resources, files, and saved compiler programs
+(snippets)**, plus an **activity log**.
 There is also a **global search** across a workspace.
 
 The frontend is pure HTML/CSS/vanilla JS (no build step). Every server call is
@@ -55,6 +56,7 @@ verbatim from those `realFn` implementations.
 
 The mock data seed lives in `js/mock-data.js` and runs automatically on first
 login/register (it seeds users, workspaces, tasks, notes, resources, files, activity).
+Snippets are **not** seeded — they are created by users at runtime.
 The seed JSON doubles as the **reference schema** — use it as the source of truth
 for field names and data shapes.
 
@@ -171,6 +173,15 @@ for field names and data shapes.
 > `status`/`priority`, note `title`/`body`, resource `title`/`description`/`url`,
 > file `filename`. An empty `q` returns empty arrays.
 
+### 5.9 Program Snippets (saved compiler programs)
+
+| Method | Path | Body / Params | Success |
+|---|---|---|---|
+| `GET` | `/api/workspaces/{id}/snippets/` | — | Array of snippets |
+| `POST` | `/api/workspaces/{id}/snippets/` | `{ "title": String (opt, defaults to "Untitled program"), "language": String, "code": String }` | Created snippet |
+| `PATCH` | `/api/workspaces/{id}/snippets/{snippetId}/` | Any subset of snippet fields | Updated snippet |
+| `DELETE` | `/api/workspaces/{id}/snippets/{snippetId}/` | — | `true`/success |
+
 ---
 
 ## 6. Database Schema
@@ -245,13 +256,25 @@ Data model mirrored from `js/mock-data.js`. All `*_at` fields are ISO-8601 strin
 | `size` | Number | Bytes |
 | `upload_date` | DateTime | ISO-8601 |
 
+### snippets
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | String (PK) | e.g. `snippet-1` |
+| `workspace_id` | FK → workspaces | Cascades on workspace delete |
+| `title` | String | Defaults to `Untitled program` when blank |
+| `language` | String | e.g. `python` (key from the frontend's `LANGUAGES` registry) |
+| `code` | Text | The saved program source |
+| `created_at` | DateTime | ISO-8601 |
+| `updated_at` | DateTime | ISO-8601 |
+
 ### activity
 
 | Field | Type | Notes |
 |---|---|---|
 | `id` | String (PK) | e.g. `activity-1` |
 | `workspace_id` | FK → workspaces | Cascades on workspace delete |
-| `type` | String | e.g. `task_updated`, `note_updated`, `resource_added`, `file_uploaded`, `task_completed` |
+| `type` | String | e.g. `task_updated`, `note_updated`, `resource_added`, `file_uploaded`, `task_completed`, `snippet_created`, `snippet_updated` |
 | `message` | String | Human-readable summary |
 | `timestamp` | DateTime | ISO-8601 |
 
@@ -267,18 +290,20 @@ workspaces 1──N tasks
 workspaces 1──N notes
 workspaces 1──N resources
 workspaces 1──N files
+workspaces 1──N snippets
 workspaces 1──N activity
 
 tasks     ── belongs to workspace
 notes     ── belongs to workspace
 resources ── belongs to workspace
 files     ── belongs to workspace
+snippets  ── belongs to workspace
 activity  ── belongs to workspace
 ```
 
 ### Deleting a workspace
 The frontend (`deleteWorkspace`) expects the backend to **cascade-delete all**
-dependent tasks, notes, resources, files, and activity for that workspace.
+dependent tasks, notes, resources, files, snippets, and activity for that workspace.
 
 ### OPEN DECISION — ownership model
 The current mock data has **no owner field** on workspaces (or child records).
@@ -298,8 +323,8 @@ current frontend exactly.
 
 ## 8. Database Design Notes (for the DB designer)
 
-- **Index `workspace_id`** on `tasks`, `notes`, `resources`, `files`, `activity`
-  (all reads are filtered by workspace).
+- **Index `workspace_id`** on `tasks`, `notes`, `resources`, `files`, `snippets`,
+  `activity` (all reads are filtered by workspace).
 - **Add an index on `workspaces.id`** and `users.email` (unique).
 - `status` / `priority` / `type` are short enums → use `ENUM` or a lookup table;
   keep the exact string values shown above (frontend renders them literally).
@@ -342,6 +367,7 @@ If you want to quick-test without registration, seed one of these users.
 | `js/resources.js` | Resource CRUD |
 | `js/files.js` | File list/upload/delete |
 | `js/search.js` | Debounced global search |
+| `js/compiler.js` | Compiler page: Pyodide runner + saved programs (snippets) UI |
 | `js/login.js`, `js/register.js` | Auth form handling |
 
 ---
@@ -357,6 +383,7 @@ If you want to quick-test without registration, seed one of these users.
 | Note | `title` required |
 | Resource | `title` required; `url` must be a valid URL format |
 | File | `filename` required |
+| Program snippet | `title` optional (defaults to `Untitled program`); `language`, `code` optional strings |
 
 On validation failure, the frontend shows the server's `message` — return a clear
 error message with a non-2xx status.

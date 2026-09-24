@@ -7,6 +7,7 @@ const ONE_SPACE_STORAGE_KEYS = {
   notes: "onespace_notes",
   resources: "onespace_resources",
   files: "onespace_files",
+  snippets: "onespace_snippets",
   activity: "onespace_activity"
 };
 
@@ -87,6 +88,7 @@ window.OneSpaceAPI.deleteWorkspace = async function (id) {
       filterCollectionByWorkspace(ONE_SPACE_STORAGE_KEYS.notes, id),
       filterCollectionByWorkspace(ONE_SPACE_STORAGE_KEYS.resources, id),
       filterCollectionByWorkspace(ONE_SPACE_STORAGE_KEYS.files, id),
+      filterCollectionByWorkspace(ONE_SPACE_STORAGE_KEYS.snippets, id),
       filterCollectionByWorkspace(ONE_SPACE_STORAGE_KEYS.activity, id)
     ]);
     return { success: true };
@@ -337,6 +339,73 @@ window.OneSpaceAPI.deleteFile = async function (workspaceId, fileId) {
   });
 };
 
+window.OneSpaceAPI.getSnippets = async function (workspaceId) {
+  return withMockData(async function () {
+    return filterByWorkspace(ONE_SPACE_STORAGE_KEYS.snippets, workspaceId);
+  }, async function () {
+    return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/snippets/`, "GET");
+  });
+};
+
+window.OneSpaceAPI.createSnippet = async function (workspaceId, data) {
+  return withMockData(async function () {
+    await requireWorkspace(workspaceId);
+    const snippet = normalizeSnippet(data);
+    snippet.id = createId("snippet");
+    snippet.workspace_id = workspaceId;
+    snippet.created_at = nowIsoString();
+    snippet.updated_at = snippet.created_at;
+    const snippets = await readCollection(ONE_SPACE_STORAGE_KEYS.snippets);
+    snippets.push(snippet);
+    await writeCollection(ONE_SPACE_STORAGE_KEYS.snippets, snippets);
+    await logActivity(workspaceId, "snippet_created", `Saved program "${snippet.title}"`);
+    return clone(snippet);
+  }, async function () {
+    return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/snippets/`, "POST", data);
+  });
+};
+
+window.OneSpaceAPI.updateSnippet = async function (workspaceId, snippetId, data) {
+  return withMockData(async function () {
+    await requireWorkspace(workspaceId);
+    const snippets = await readCollection(ONE_SPACE_STORAGE_KEYS.snippets);
+    const index = findIndexById(snippets, snippetId);
+    if (index === -1 || snippets[index].workspace_id !== workspaceId) {
+      throw new Error("Program not found.");
+    }
+    const updated = {
+      ...clone(snippets[index]),
+      ...normalizeSnippet(data, true),
+      id: snippets[index].id,
+      workspace_id: workspaceId,
+      created_at: snippets[index].created_at,
+      updated_at: nowIsoString()
+    };
+    snippets[index] = updated;
+    await writeCollection(ONE_SPACE_STORAGE_KEYS.snippets, snippets);
+    await logActivity(workspaceId, "snippet_updated", `Updated program "${updated.title}"`);
+    return clone(updated);
+  }, async function () {
+    return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/snippets/${encodeURIComponent(snippetId)}/`, "PATCH", data);
+  });
+};
+
+window.OneSpaceAPI.deleteSnippet = async function (workspaceId, snippetId) {
+  return withMockData(async function () {
+    await requireWorkspace(workspaceId);
+    const snippets = await readCollection(ONE_SPACE_STORAGE_KEYS.snippets);
+    const index = findIndexById(snippets, snippetId);
+    if (index === -1 || snippets[index].workspace_id !== workspaceId) {
+      throw new Error("Program not found.");
+    }
+    snippets.splice(index, 1);
+    await writeCollection(ONE_SPACE_STORAGE_KEYS.snippets, snippets);
+    return { success: true };
+  }, async function () {
+    return requestJson(`/api/workspaces/${encodeURIComponent(workspaceId)}/snippets/${encodeURIComponent(snippetId)}/`, "DELETE");
+  });
+};
+
 window.OneSpaceAPI.getActivity = async function (workspaceId) {
   return withMockData(async function () {
     return filterByWorkspace(ONE_SPACE_STORAGE_KEYS.activity, workspaceId);
@@ -511,6 +580,20 @@ function normalizeFile(data) {
     filename,
     size: Number.isFinite(size) && size >= 0 ? size : 0
   };
+}
+
+function normalizeSnippet(data, partial = false) {
+  const normalized = {};
+  if (!partial || Object.prototype.hasOwnProperty.call(data || {}, "title")) {
+    normalized.title = String(data.title || "").trim() || "Untitled program";
+  }
+  if (!partial || Object.prototype.hasOwnProperty.call(data || {}, "language")) {
+    normalized.language = String(data.language || "").trim();
+  }
+  if (!partial || Object.prototype.hasOwnProperty.call(data || {}, "code")) {
+    normalized.code = String(data.code || "");
+  }
+  return normalized;
 }
 
 function copyOptionalString(source, target, key, partial) {

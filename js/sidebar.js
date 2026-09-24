@@ -6,13 +6,14 @@
     { page: "notes", icon: "description", label: "Notes" },
     { page: "resources", icon: "menu_book", label: "Resources" },
     { page: "files", icon: "folder", label: "Files" },
-    { page: "search", icon: "search", label: "Search" }
+    { page: "search", icon: "search", label: "Search" },
+    { page: "compiler", icon: "code", label: "Compiler" }
   ];
 
   function getCurrentPage() {
     var path = window.location.pathname.split("/").pop();
     var file = path.split("?")[0];
-    var match = file.match(/^(workspaces|dashboard|tasks|notes|resources|files|search)\.html$/);
+    var match = file.match(/^(workspaces|dashboard|tasks|notes|resources|files|search|compiler)\.html$/);
     return match ? match[1] : null;
   }
 

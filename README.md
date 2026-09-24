@@ -12,6 +12,8 @@ A centralized, project‑based **work‑context management** web application bui
 - **Notes**: rich cards with title/body, timestamps, edit/delete.
 - **Resources**: title, URL, description, open in new tab, validation.
 - **Files**: mock upload (file picker captures name/size only), list, delete, download disabled with tooltip.
+- **Compiler**: write and run Python in the browser (Pyodide, loaded on demand from CDN) with stdout/stderr capture, error traces, and Ctrl/Cmd + Enter.
+- **Saved programs**: name, save, load, rename, and delete programs per workspace from a dropdown on the Compiler page; unsaved changes prompt before leaving.
 - **Dashboard**: summary cards, recent items per module, recent activity feed.
 - **Global search**: debounced, case‑insensitive across tasks, notes, resources, files; grouped results with navigation.
 - **Responsive UI**: works on mobile, tablet, desktop; Bootstrap 5 components throughout.
@@ -45,6 +47,7 @@ onespace-frontend/
 ├── resources.html
 ├── files.html
 ├── search.html
+├── compiler.html
 ├── README.md
 ├── css/
 │   ├── style.css
@@ -64,7 +67,8 @@ onespace-frontend/
 │   ├── notes.js
 │   ├── resources.js
 │   ├── files.js
-│   └── search.js
+│   ├── search.js
+│   └── compiler.js
 └── assets/
 ```
 
@@ -109,6 +113,7 @@ On first load each collection key is checked; if absent it is seeded from `js/mo
 | `onespace_notes` | `notes` | `id, workspace_id, title, body, created_at, updated_at` |
 | `onespace_resources` | `resources` | `id, workspace_id, title, url, description, created_at, updated_at` |
 | `onespace_files` | `files` | `id, workspace_id, filename, upload_date, size` |
+| `onespace_snippets` | — (not seeded; created on first save) | `id, workspace_id, title, language, code, created_at, updated_at` |
 | `onespace_activity` | `activity` | `id, workspace_id, type, message, timestamp` |
 | `onespace_auth` | created on login | `token, userId, userEmail, createdAt` |
 
@@ -129,6 +134,7 @@ All CRUD operations read/write these keys via `OneSpaceAPI` – **page scripts n
 | `resources.html` | Cards with link button, add/edit/delete modals | URL validation, `target="_blank" rel="noopener noreferrer"` |
 | `files.html` | Table, mock upload (file picker), delete, download disabled | Shows “Download unavailable in mock mode” tooltip |
 | `search.html` | Single input, debounced, grouped results, navigation | Highlights matches, empty state |
+| `compiler.html` | Code editor + output panel for running Python | Language select, Run (Pyodide), saved‑programs dropdown, Save/Rename/Delete, unsaved‑changes prompt on exit |
 
 ---
 
@@ -197,7 +203,7 @@ All endpoints require authentication (`Authorization: Bearer <token>`). Response
 | PATCH | `/api/workspaces/{workspace_id}/tasks/{id}/` | Update task | Partial task fields | `{ "success": true, "data": { updated task } }` |
 | DELETE | `/api/workspaces/{workspace_id}/tasks/{id}/` | Delete task | – | `{ "success": true, "message": "Task deleted" }` |
 
-*(Notes, Resources, Files follow identical CRUD pattern under `/api/workspaces/{workspace_id}/notes/`, `/resources/`, `/files/`.)*
+*(Notes, Resources, Files follow identical CRUD pattern under `/api/workspaces/{workspace_id}/notes/`, `/resources/`, `/files/`. Saved compiler programs follow it too under `/api/workspaces/{workspace_id}/snippets/` — see `BACKEND_HANDOFF.md` §5.9.)*
 
 ### Files
 | Method | Path | Purpose | Request | Success Response |
